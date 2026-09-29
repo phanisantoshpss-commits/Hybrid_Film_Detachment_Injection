@@ -1,0 +1,4 @@
+/* Surface film models */
+hybridFilmDetachmentInjection/hybridFilmDetachmentInjection.C
+
+LIB = $(FOAM_USER_LIBBIN)/libSPFFSubModels
