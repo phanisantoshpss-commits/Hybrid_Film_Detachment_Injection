@@ -270,7 +270,7 @@ The model is registered through the OpenFOAM runtime-selection mechanism and can
 
 ---
 
-## Planned validation
+## Validation
 
 The model is tested using four characteristic conditions:
 
