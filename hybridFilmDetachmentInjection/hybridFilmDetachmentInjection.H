@@ -27,29 +27,50 @@ Class
     Foam::regionModels::surfaceFilmModels::hybridFilmDetachmentInjection
 
 Description
-    Film Dripping mass transfer model.
+ Hybrid surface-film detachment and cloud-injection model combining
+ gravity-driven dripping and aerodynamic gas-shear stripping.
 
-    If the film thickness exceeds the critical value needed to generate one or
-    more drops, the equivalent mass is removed from the film.  The critical film
-    thickness is calculated from the Rayleigh-Taylor stability analysis of film
-    flow on an inclined plane by Brun et.al.
+ A local Bond number characterises gravity detachment
+ Bo = (rho_l - rho_g)*g_n*delta^2/sigma
+ and shear stripping by a film Weber number based on the tangential
+ gas-film relative velocity
+ We_f = rho_g*|U_g - U_f|_t^2*delta/sigma.
 
-    Reference:
-    \verbatim
-        Brun, P. T., Damiano, A., Rieu, P., Balestra, G., & Gallaire, F. (2015).
-        Rayleigh-Taylor instability under an inclined plane.
-        Physics of Fluids (1994-present), 27(8), 084107.
-    \endverbatim
+ Detachment is activated when either dimensionless number exceeds its
+ user-specified critical value. The amount of film mass transferred to
+ the Lagrangian cloud is determined from the combined threshold
+ exceedance using a capillary-timescale-based rate law.
 
-    The diameter of the drops formed are obtained from the local capillary
-    length multiplied by the \c dCoeff coefficient which defaults to 3.3.
+ For gravity-only detachment, the injected droplet diameter follows the
+ capillary-length relation used by OpenFOAM BrunDrippingInjection,
+ d = dCoeff*sqrt(sigma/(rho_l*|g|)), with dCoeff = 3.3 by default.
 
-    Reference:
-    \verbatim
-        Lefebvre, A. (1988).
-        Atomization and sprays
-        (Vol. 1040, No. 2756). CRC press.
-    \endverbatim
+ For shear-only detachment, the Sauter mean diameter is estimated using
+ the empirical Sattelmayer prefilming-airblast correlation
+ d32 = 0.67*sigma^0.75/U_g^1.57.
+
+ If both mechanisms are active, the present model uses an SMD-inspired
+ weighted harmonic interpolation between the gravity and shear diameter
+ estimates. The weighting and mass-detachment rate law are model-specific
+ closures introduced in this project.
+
+References
+ Brun, P. T., Damiano, A., Rieu, P., Balestra, G., & Gallaire, F. (2015).
+ Rayleigh-Taylor instability under an inclined plane.
+ Physics of Fluids, 27(8), 084107. doi:10.1063/1.4927857
+
+ Lefebvre, A. H. (1988).
+ Atomization and Sprays. CRC Press.
+ Sattelmayer, T. (1985).
+ Zum Einfluss der ausgebildeten, turbulenten Luft-Fluessigkeitsfilm-
+ Stroemung auf den Filmzerfall und die Tropfenbildung am Austritt von
+ Spalten geringer Hoehe. Dissertation, Universitaet Karlsruhe.
+
+ Sattelmayer, T., & Wittig, S. (1986).
+ Internal Flow Effects in Prefilming Airblast Atomizers: Mechanisms of
+ Atomization and Droplet Spectra. Journal of Engineering for Gas Turbines
+ and Power, 108(3), 465-472. doi:10.1115/1.3239931
+
 
 SourceFiles
     hybridFilmDetachmentInjection.C
